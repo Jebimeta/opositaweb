@@ -1,0 +1,1144 @@
+openapi: 3.0.3
+info:
+  title: OpositaWeb
+  description: Aplicación que se genera test para oposiciones
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local server
+
+tags:
+  - name: auth
+    description: Controller para autenticacion
+
+  - name: customer
+    description: Controller para usuarios
+
+  - name: question
+    description: Controller para las preguntas
+
+  - name: test
+    description: Controller para los test
+
+  - name: payment
+    description: Controller para los pagos
+
+  - name: about
+    description: Controlador para recibir mensajes por parte de usuarios
+
+paths:
+
+  /about/send-email:
+    post:
+      tags:
+        - about
+      summary: Send a email to OpositaWeb
+      description: Send a email and receive a sucesfully email String as response.
+      operationId: sendEmail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+        required: true
+      responses:
+        '200':
+          description: The email was sent successfuly
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailResponse'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: Register a user
+      description: Register a user and returns an access token and refresh token.
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRequest'
+        required: true
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Log in a user
+      description: Authenticates a user and returns an access token and refresh token.
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+        '400':
+          description: Invalid input
+        '401':
+          description: Authentication failed
+
+  /auth/verify/{token}:
+    post:
+      tags:
+        - auth
+      summary: Verificar la cuenta de un usuario usando el token de verificación
+      description: Verifica la cuenta del usuario utilizando el token de verificación proporcionado.
+      operationId: verifyUser
+      parameters:
+        - name: token
+          in: path
+          description: El token de verificación para verificar la cuenta
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cuenta verificada exitosamente
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Cuenta verificada exitosamente."
+        '400':
+          description: Token de verificación inválido
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Token de verificación inválido."
+        '404':
+          description: Token de verificación no encontrado
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Token de verificación no encontrado."
+
+  /auth/authenticated-user:
+    get:
+      tags:
+        - auth
+      summary: Obtener la información del usuario autenticado
+      description: Recupera la información del usuario autenticado.
+      operationId: getAuthenticatedUser
+      responses:
+        '200':
+          description: Usuario autenticado encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '401':
+          description: No autenticado
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "No se encontró ningún usuario autenticado."
+
+  /customers:
+    get:
+      tags:
+        - customer
+      summary: Obtener todos los usuarios
+      description: Devuelve una lista de todos los usuarios
+      operationId: getUsers
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerResponse'
+    post:
+      summary: Crear un nuevo usuario
+      description: Crea un nuevo usuario
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRequest'
+      responses:
+        '200':
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+
+  /customers/{dni}:
+    get:
+      summary: Obtener un usuario por DNI
+      description: Devuelve un usuario por DNI
+      operationId: getUserByDni
+      parameters:
+        - name: dni
+          in: path
+          description: ID del usuario
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '400':
+          description: Invalid email supplied
+        '404':
+          description: User not found
+
+  /customers/{email}:
+    get:
+      summary: Obtener un usuario por email
+      description: Devuelve un usuario por email
+      operationId: getUserByEmail
+      parameters:
+        - name: email
+          in: path
+          description: Email del usuario
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '400':
+          description: Invalid email supplied
+        '404':
+          description: User not found
+
+  /customers/{id}:
+    get:
+      summary: Obtener un usuario por id
+      description: Devuelve un usuario por id
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID del usuario
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '400':
+          description: Invalid id supplied
+        '404':
+          description: User not found
+
+  /customers/update/{id}:
+    put:
+      summary: Actualizar un usuario
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRequest'
+      responses:
+        '200':
+          description: Usuario actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+
+  /customers/delete/{id}:
+    delete:
+      summary: Eliminar un usuario
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Usuario eliminado
+
+  /payments:
+    get:
+      summary: Obtener todos los pagos
+      operationId: getPayments
+      responses:
+        '200':
+          description: Lista de pagos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentResponse'
+    post:
+      summary: Crear un nuevo pago
+      operationId: createPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: Pago creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+
+  /payments/{id}:
+    get:
+      summary: Obtener un pago por ID
+      operationId: getPaymentById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalles del pago
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+
+  /payments/update/{id}:
+    put:
+      summary: Actualizar un pago
+      operationId: updatePayment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '400':
+          description: Invalid id supplied
+        '404':
+          description: Payment not found
+
+  /payments/delete/{id}:
+    delete:
+      summary: Eliminar un pago
+      operationId: deletePayment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Pago eliminado
+
+  /payment-plans:
+    get:
+      summary: Obtener todos los planes de pago
+      operationId: getPaymentPlans
+      responses:
+        '200':
+          description: Lista de planes de pago
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentPlanResponse'
+    post:
+      summary: Crear un nuevo plan de pago
+      operationId: createPaymentPlan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentPlanRequest'
+      responses:
+        '201':
+          description: Plan de pago creado
+
+  /payment-plans/{id}:
+    get:
+      summary: Obtener un plan de pago por ID
+      operationId: getPaymentPlanById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalles del plan de pago
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentPlanResponse'
+
+  /payment-plans/update/{id}:
+    put:
+      summary: Actualizar un plan de pago
+      operationId: updatePaymentPlan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentPlanRequest'
+      responses:
+        '200':
+          description: Plan de pago actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentPlanResponse'
+
+  /payment-plans/delete/{id}:
+    delete:
+      summary: Eliminar un plan de pago
+      operationId: deletePaymentPlan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Plan de pago eliminado
+
+  /questions:
+    get:
+      summary: Obtener todas las preguntas
+      operationId: getQuestions
+      responses:
+        '200':
+          description: Lista de preguntas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuestionResponse'
+    post:
+      summary: Crear una nueva pregunta
+      operationId: createQuestion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionRequest'
+      responses:
+        '201':
+          description: Pregunta creada
+
+  /questions/{id}:
+    get:
+      summary: Obtener una pregunta por ID
+      operationId: getQuestionById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalles de la pregunta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionResponse'
+
+  /questions/update/{id}:
+    put:
+      summary: Actualizar una pregunta
+      operationId: updateQuestion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionRequest'
+      responses:
+        '200':
+          description: Pregunta actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionResponse'
+
+  /questions/delete/{id}:
+    delete:
+      summary: Eliminar una pregunta
+      operationId: deleteQuestion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Pregunta eliminada
+
+  /tests:
+    get:
+      summary: Obtener todos los tests
+      operationId: getTests
+      responses:
+        '200':
+          description: Lista de tests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TestResponse'
+    post:
+      summary: Crear un nuevo test
+      operationId: createTest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestRequest'
+      responses:
+        '201':
+          description: Test creado
+
+  /tests/{id}:
+    get:
+      summary: Obtener un test por ID
+      operationId: getTestById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalles del test
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestResponse'
+
+  /tests/update/{id}:
+    put:
+      summary: Actualizar un test
+      operationId: updateTest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestRequest'
+      responses:
+        '200':
+          description: Test actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestResponse'
+
+  /tests/delete/{id}:
+    delete:
+      summary: Eliminar un test
+      operationId: deleteTest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Test eliminado
+
+  /pdf:
+    get:
+      summary: Obtener todas las URLs de PDF
+      operationId: getPdfUrls
+      responses:
+        '200':
+          description: Lista de URLs de PDF
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PdfResponse'
+    post:
+      summary: Crear una nueva URL de PDF
+      operationId: createPdfUrl
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PdfRequest'
+      responses:
+        '201':
+          description: URL de PDF creada
+
+  /pdf/{id}:
+    get:
+      summary: Obtener una URL de PDF por ID
+      operationId: getPdfUrlById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalles de la URL de PDF
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PdfResponse'
+
+  /pdf/update/{id}:
+    put:
+      summary: Actualizar una URL de PDF
+      operationId: updatePdfUrl
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PdfRequest'
+      responses:
+        '200':
+          description: URL de PDF actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PdfResponse'
+
+  /pdf/delete/{id}:
+    delete:
+      summary: Eliminar una URL de PDF
+      operationId: deletePdfUrl
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: URL de PDF eliminada
+
+components:
+  schemas:
+    EmailRequest:
+      type: object
+      properties:
+        senderName:
+          type: string
+        phoneNumber:
+          type: string
+        gender:
+          type: string
+        emailMessage:
+          type: string
+
+    EmailResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: '12345'
+
+    AuthenticationResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQSflwTmsuHo_iij07PpRZsI7UlFz06OZtToOZfpC9q6U
+        refreshToken:
+          type: string
+          example: dGhpcy1yZWZyZXNoLXRva2Vu
+        message:
+          type: string
+          example: Authentication successful
+
+    RegisterResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: null
+        refreshToken:
+          type: string
+          example: null
+        message:
+          type: string
+          example: Usuario registrado correctamente. Por favor revisa tu correo electrónico para verificar la cuenta.
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 404
+          description: "Código de estado HTTP que indica el tipo de error."
+        message:
+          type: string
+          example: "Cart not found"
+          description: "Mensaje descriptivo del error que proporciona más detalles."
+        details:
+          type: string
+          example: "The cart with the given ID does not exist."
+          description: "Información adicional o detalles sobre el error (opcional)."
+
+    CustomerRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Juan
+        lastNames:
+          type: string
+          example: Pérez
+        dni:
+          type: string
+          example: 12345678A
+        email:
+          type: string
+          example: juan.perez@example.com
+        password:
+          type: string
+          example: Password@123
+        telephone:
+          type: string
+          example: "123456789"
+        role:
+          type: string
+          enum:
+            - ADMIN
+            - USER
+          example: USER
+
+    CustomerResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Juan
+        lastNames:
+          type: string
+          example: Pérez
+        dni:
+          type: string
+          example: 12345678A
+        email:
+          type: string
+          example: juan.perez@example.com
+        password:
+          type: string
+          example: Password@123
+        telephone:
+          type: string
+          example: "123456789"
+
+    PaymentRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+        paymentDate:
+          type: string
+          format: date-time
+        customer:
+          $ref: '#/components/schemas/CustomerRequest'
+        paymentPlan:
+          $ref: '#/components/schemas/PaymentPlanRequest'
+
+    PaymentResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        amount:
+          type: number
+          format: float
+        paymentDate:
+          type: string
+          format: date-time
+        customer:
+          $ref: '#/components/schemas/CustomerResponse'
+        paymentPlan:
+          $ref: '#/components/schemas/PaymentPlanResponse'
+
+    PaymentPlanRequest:
+      type: object
+      properties:
+        paymentType:
+          type: string
+          enum:
+            - MONTHLY
+            - HALF_YEAR
+            - ONE_YEAR
+        price:
+          type: number
+          format: float
+          example: 10.0
+
+    PaymentPlanResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        paymentType:
+          type: string
+          enum:
+            - MONTHLY
+            - HALF_YEAR
+            - ONE_YEAR
+        price:
+          type: number
+          format: float
+          example: 10.0
+
+    QuestionRequest:
+      type: object
+      properties:
+        questionStatement:
+          type: string
+        optionA:
+          type: string
+        optionB:
+          type: string
+        optionC:
+          type: string
+        optionD:
+          type: string
+        answer:
+          type: string
+        explanation:
+          type: string
+        theme:
+          type: string
+          enum:
+            - DERECHOS_HUMANOS
+            - IGUALDAD
+            - PREVENCION_RIESGOS
+            - CONSTITUCIONAL
+            - UNION_EUROPEA
+            - INTERNACIONAL
+            - CIVIL
+            - PENAL
+            - PROCESAL_PENAL
+            - ADMINISTRATIVO
+            - PROTECCION_DATOS
+            - EXTRANJERIA
+            - SEGURIDAD_PUBLICA
+            - MINISTERIO
+            - FUERZAS_SEGURIDAD
+            - SOCIO_CULTURAL
+            - TECNICO_CIENTIFICAS
+            - TOPOGRAFIA
+            - DEONTOLOGIA
+            - PENAL_MENORES
+            - VIOLENCIA_GENERO
+            - ARMAS_EXPLOSIVOS
+            - FISCAL
+            - INGLES
+            - ESPANOL
+          example: CONSTITUCIONAL
+        test:
+          $ref: '#/components/schemas/TestRequest'
+
+    QuestionResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        questionStatement:
+          type: string
+        optionA:
+          type: string
+        optionB:
+          type: string
+        optionC:
+          type: string
+        optionD:
+          type: string
+        answer:
+          type: string
+        explanation:
+          type: string
+        theme:
+          type: string
+          enum:
+            - DERECHOS_HUMANOS
+            - IGUALDAD
+            - PREVENCION_RIESGOS
+            - CONSTITUCIONAL
+            - UNION_EUROPEA
+            - INTERNACIONAL
+            - CIVIL
+            - PENAL
+            - PROCESAL_PENAL
+            - ADMINISTRATIVO
+            - PROTECCION_DATOS
+            - EXTRANJERIA
+            - SEGURIDAD_PUBLICA
+            - MINISTERIO
+            - FUERZAS_SEGURIDAD
+            - SOCIO_CULTURAL
+            - TECNICO_CIENTIFICAS
+            - TOPOGRAFIA
+            - DEONTOLOGIA
+            - PENAL_MENORES
+            - VIOLENCIA_GENERO
+            - ARMAS_EXPLOSIVOS
+            - FISCAL
+            - INGLES
+            - ESPANOL
+          example: CONSTITUCIONAL
+        test:
+            $ref: '#/components/schemas/TestResponse'
+
+    TestRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        theme:
+          type: string
+          enum:
+            - DERECHOS_HUMANOS
+            - IGUALDAD
+            - PREVENCION_RIESGOS
+            - CONSTITUCIONAL
+            - UNION_EUROPEA
+            - INTERNACIONAL
+            - CIVIL
+            - PENAL
+            - PROCESAL_PENAL
+            - ADMINISTRATIVO
+            - PROTECCION_DATOS
+            - EXTRANJERIA
+            - SEGURIDAD_PUBLICA
+            - MINISTERIO
+            - FUERZAS_SEGURIDAD
+            - SOCIO_CULTURAL
+            - TECNICO_CIENTIFICAS
+            - TOPOGRAFIA
+            - DEONTOLOGIA
+            - PENAL_MENORES
+            - VIOLENCIA_GENERO
+            - ARMAS_EXPLOSIVOS
+            - FISCAL
+            - INGLES
+            - ESPANOL
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionRequest'
+
+    TestResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        theme:
+          type: string
+          enum:
+            - DERECHOS_HUMANOS
+            - IGUALDAD
+            - PREVENCION_RIESGOS
+            - CONSTITUCIONAL
+            - UNION_EUROPEA
+            - INTERNACIONAL
+            - CIVIL
+            - PENAL
+            - PROCESAL_PENAL
+            - ADMINISTRATIVO
+            - PROTECCION_DATOS
+            - EXTRANJERIA
+            - SEGURIDAD_PUBLICA
+            - MINISTERIO
+            - FUERZAS_SEGURIDAD
+            - SOCIO_CULTURAL
+            - TECNICO_CIENTIFICAS
+            - TOPOGRAFIA
+            - DEONTOLOGIA
+            - PENAL_MENORES
+            - VIOLENCIA_GENERO
+            - ARMAS_EXPLOSIVOS
+            - FISCAL
+            - INGLES
+            - ESPANOL
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionResponse'
+
+    Token:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        accessToken:
+          type: string
+          example: abc123
+        refreshToken:
+          type: string
+          example: def456
+        loggedOut:
+          type: boolean
+          example: false
+        customer:
+          $ref: '#/components/schemas/CustomerRequest'
+
+    PdfRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: tema
+        url:
+          type: string
+          format: uri
+          example: "https://example.com/document.pdf"
+
+    PdfResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: tema
+        url:
+          type: string
+          format: uri
+          example: "https://example.com/document.pdf"
