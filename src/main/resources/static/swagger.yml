@@ -32,8 +32,14 @@ tags:
   - name: payment
     description: Controller para los pagos
 
+  - name: payment-plan
+    description: Controller para los planes de pagos
+
   - name: about
-    description: Controlador para recibir mensajes por parte de usuarios
+    description: Controller para recibir mensajes por parte de usuarios
+
+  - name: pdf
+    description: Controller para los pdf
 
 paths:
 
@@ -171,7 +177,7 @@ paths:
                 type: string
                 example: "No se encontró ningún usuario autenticado."
 
-  /customers:
+  /customers/obtain-customers:
     get:
       tags:
         - customer
@@ -187,7 +193,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CustomerResponse'
+
+  /customers/create-customer:
     post:
+      tags:
+        - customer
       summary: Crear un nuevo usuario
       description: Crea un nuevo usuario
       operationId: createUser
@@ -205,8 +215,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomerResponse'
 
-  /customers/{dni}:
+  /customers/find-customer-by-dni/{dni}:
     get:
+      tags:
+        - customer
       summary: Obtener un usuario por DNI
       description: Devuelve un usuario por DNI
       operationId: getUserByDni
@@ -229,8 +241,10 @@ paths:
         '404':
           description: User not found
 
-  /customers/{email}:
+  /customers/find-customer-by-email/{email}:
     get:
+      tags:
+        - customer
       summary: Obtener un usuario por email
       description: Devuelve un usuario por email
       operationId: getUserByEmail
@@ -253,8 +267,10 @@ paths:
         '404':
           description: User not found
 
-  /customers/{id}:
+  /customers/find-customer/{id}:
     get:
+      tags:
+        - customer
       summary: Obtener un usuario por id
       description: Devuelve un usuario por id
       operationId: getUserById
@@ -277,8 +293,10 @@ paths:
         '404':
           description: User not found
 
-  /customers/update/{id}:
+  /customers/update-customer/{id}:
     put:
+      tags:
+        - customer
       summary: Actualizar un usuario
       operationId: updateUser
       parameters:
@@ -301,22 +319,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomerResponse'
 
-  /customers/delete/{id}:
+  /customers/delete/{dni}:
     delete:
+      tags:
+        - customer
       summary: Eliminar un usuario
       operationId: deleteUser
       parameters:
-        - name: id
+        - name: dni
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '204':
           description: Usuario eliminado
 
-  /payments:
+  /payments/obtain-payments:
     get:
+      tags:
+        - payment
       summary: Obtener todos los pagos
       operationId: getPayments
       responses:
@@ -328,7 +350,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PaymentResponse'
+
+  /payments/create-payments:
     post:
+      tags:
+        - payment
       summary: Crear un nuevo pago
       operationId: createPayment
       requestBody:
@@ -345,8 +371,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaymentResponse'
 
-  /payments/{id}:
+  /payments/find-payment/{id}:
     get:
+      tags:
+        - payment
       summary: Obtener un pago por ID
       operationId: getPaymentById
       parameters:
@@ -365,6 +393,8 @@ paths:
 
   /payments/update/{id}:
     put:
+      tags:
+        - payment
       summary: Actualizar un pago
       operationId: updatePayment
       parameters:
@@ -393,6 +423,8 @@ paths:
 
   /payments/delete/{id}:
     delete:
+      tags:
+        - payment
       summary: Eliminar un pago
       operationId: deletePayment
       parameters:
@@ -405,8 +437,10 @@ paths:
         '204':
           description: Pago eliminado
 
-  /payment-plans:
+  /payment-plans/obtain-payment-plans:
     get:
+      tags:
+        - payment-plan
       summary: Obtener todos los planes de pago
       operationId: getPaymentPlans
       responses:
@@ -419,6 +453,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/PaymentPlanResponse'
     post:
+      tags:
+        - payment-plan
       summary: Crear un nuevo plan de pago
       operationId: createPaymentPlan
       requestBody:
@@ -430,9 +466,15 @@ paths:
       responses:
         '201':
           description: Plan de pago creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentPlanResponse'
 
-  /payment-plans/{id}:
+  /payment-plans/find-payment-plan/{id}:
     get:
+      tags:
+        - payment-plan
       summary: Obtener un plan de pago por ID
       operationId: getPaymentPlanById
       parameters:
@@ -451,6 +493,8 @@ paths:
 
   /payment-plans/update/{id}:
     put:
+      tags:
+        - payment-plan
       summary: Actualizar un plan de pago
       operationId: updatePaymentPlan
       parameters:
@@ -475,6 +519,8 @@ paths:
 
   /payment-plans/delete/{id}:
     delete:
+      tags:
+        - payment-plan
       summary: Eliminar un plan de pago
       operationId: deletePaymentPlan
       parameters:
@@ -487,8 +533,10 @@ paths:
         '204':
           description: Plan de pago eliminado
 
-  /questions:
+  /questions/obtain-questions:
     get:
+      tags:
+        - question
       summary: Obtener todas las preguntas
       operationId: getQuestions
       responses:
@@ -500,7 +548,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/QuestionResponse'
+
+  /questions/create-question:
     post:
+      tags:
+        - question
       summary: Crear una nueva pregunta
       operationId: createQuestion
       requestBody:
@@ -512,9 +564,15 @@ paths:
       responses:
         '201':
           description: Pregunta creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionResponse'
 
-  /questions/{id}:
+  /questions/find-question/{id}:
     get:
+      tags:
+        - question
       summary: Obtener una pregunta por ID
       operationId: getQuestionById
       parameters:
@@ -533,6 +591,8 @@ paths:
 
   /questions/update/{id}:
     put:
+      tags:
+        - question
       summary: Actualizar una pregunta
       operationId: updateQuestion
       parameters:
@@ -557,6 +617,8 @@ paths:
 
   /questions/delete/{id}:
     delete:
+      tags:
+        - question
       summary: Eliminar una pregunta
       operationId: deleteQuestion
       parameters:
@@ -569,8 +631,10 @@ paths:
         '204':
           description: Pregunta eliminada
 
-  /tests:
+  /tests/obtain-tests:
     get:
+      tags:
+        - test
       summary: Obtener todos los tests
       operationId: getTests
       responses:
@@ -582,7 +646,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TestResponse'
+
+  /tests/create-test:
     post:
+      tags:
+        - test
       summary: Crear un nuevo test
       operationId: createTest
       requestBody:
@@ -594,9 +662,15 @@ paths:
       responses:
         '201':
           description: Test creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestResponse'
 
-  /tests/{id}:
+  /tests/find-test/{id}:
     get:
+      tags:
+        - test
       summary: Obtener un test por ID
       operationId: getTestById
       parameters:
@@ -615,6 +689,8 @@ paths:
 
   /tests/update/{id}:
     put:
+      tags:
+        - test
       summary: Actualizar un test
       operationId: updateTest
       parameters:
@@ -639,6 +715,8 @@ paths:
 
   /tests/delete/{id}:
     delete:
+      tags:
+        - test
       summary: Eliminar un test
       operationId: deleteTest
       parameters:
@@ -651,8 +729,11 @@ paths:
         '204':
           description: Test eliminado
 
-  /pdf:
+
+  /pdf/obtain-pdf:
     get:
+      tags:
+        - pdf
       summary: Obtener todas las URLs de PDF
       operationId: getPdfUrls
       responses:
@@ -664,7 +745,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PdfResponse'
+
+  /pdf/create-pdf:
     post:
+      tags:
+        - pdf
       summary: Crear una nueva URL de PDF
       operationId: createPdfUrl
       requestBody:
@@ -676,9 +761,15 @@ paths:
       responses:
         '201':
           description: URL de PDF creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PdfResponse'
 
-  /pdf/{id}:
+  /pdf/find-pdf/{id}:
     get:
+      tags:
+        - pdf
       summary: Obtener una URL de PDF por ID
       operationId: getPdfUrlById
       parameters:
@@ -697,6 +788,8 @@ paths:
 
   /pdf/update/{id}:
     put:
+      tags:
+        - pdf
       summary: Actualizar una URL de PDF
       operationId: updatePdfUrl
       parameters:
@@ -721,6 +814,8 @@ paths:
 
   /pdf/delete/{id}:
     delete:
+      tags:
+        - pdf
       summary: Eliminar una URL de PDF
       operationId: deletePdfUrl
       parameters:
@@ -811,7 +906,6 @@ components:
       properties:
         id:
           type: integer
-          example: 1
         name:
           type: string
           example: Juan
@@ -832,10 +926,10 @@ components:
           example: "123456789"
         role:
           type: string
-          enum:
-            - ADMIN
-            - USER
           example: USER
+        status:
+          type: boolean
+          example: true
 
     CustomerResponse:
       type: object
@@ -858,6 +952,12 @@ components:
         telephone:
           type: string
           example: "123456789"
+        role:
+          type: string
+          example: USER
+        status:
+          type: boolean
+          example: true
 
     PaymentRequest:
       type: object
@@ -924,14 +1024,11 @@ components:
       properties:
         questionStatement:
           type: string
-        optionA:
-          type: string
-        optionB:
-          type: string
-        optionC:
-          type: string
-        optionD:
-          type: string
+          enum:
+            - OPTION_A
+            - OPTION_B
+            - OPTION_C
+            - OPTION_D
         answer:
           type: string
         explanation:
@@ -975,14 +1072,11 @@ components:
           type: integer
         questionStatement:
           type: string
-        optionA:
-          type: string
-        optionB:
-          type: string
-        optionC:
-          type: string
-        optionD:
-          type: string
+          enum:
+            - OPTION_A
+            - OPTION_B
+            - OPTION_C
+            - OPTION_D
         answer:
           type: string
         explanation:
@@ -1017,7 +1111,7 @@ components:
             - ESPANOL
           example: CONSTITUCIONAL
         test:
-            $ref: '#/components/schemas/TestResponse'
+          $ref: '#/components/schemas/TestResponse'
 
     TestRequest:
       type: object
