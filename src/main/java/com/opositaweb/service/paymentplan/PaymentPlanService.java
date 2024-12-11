@@ -1,5 +1,6 @@
 package com.opositaweb.service.paymentplan;
 
+import com.opositaweb.domain.vo.PaymentPlanRequest;
 import com.opositaweb.repository.entities.PaymentPlan;
 
 import java.util.List;
@@ -9,11 +10,9 @@ public interface PaymentPlanService {
 
 	List<PaymentPlan> findAll();
 
-	Optional<PaymentPlan> findById(Long id);
+	PaymentPlan findById(Long id);
 
-	Optional<PaymentPlan> findByName(String name);
-
-	PaymentPlan save(PaymentPlan paymentPlan);
+	PaymentPlan save(PaymentPlanRequest paymentPlanRequest);
 
 	PaymentPlan update(PaymentPlan paymentPlan);
 

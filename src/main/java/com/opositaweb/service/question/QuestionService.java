@@ -10,7 +10,7 @@ public interface QuestionService {
 
 	List<Question> findAll();
 
-	Optional<Question> findById(Long id);
+	Question findById(Long id);
 
 	Question save(Question question);
 

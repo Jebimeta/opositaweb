@@ -55,4 +55,6 @@ public class Customer {
 
 	private boolean status;
 
+	private boolean subscriptionStatus;
+
 }

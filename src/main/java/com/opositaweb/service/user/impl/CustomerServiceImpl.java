@@ -1,5 +1,7 @@
 package com.opositaweb.service.user.impl;
 
+import com.opositaweb.exception.AppErrorCode;
+import com.opositaweb.exception.BusinessException;
 import com.opositaweb.repository.entities.Customer;
 import com.opositaweb.repository.enums.Rol;
 import com.opositaweb.repository.jpa.UserRepository;
@@ -20,64 +22,55 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional
 	@Override
 	public List<Customer> findAll() {
-		List<Customer> customers = userRepository.findAll();
+		List<Customer> customers = userRepository.findAll().
+				stream().
+				filter(customer -> customer.getRole().equals(Rol.USER)).
+				toList();
+		if (customers.isEmpty()) {
+			throw new BusinessException(AppErrorCode.ERROR_CUSTOMER_NOT_FOUND);
+		}
 		return customers;
 	}
 
 	@Transactional
 	@Override
-	public Optional<Customer> findById(Long id) {
-		Optional<Customer> user = userRepository.findById(id);
-		if (user.isPresent()) {
-			return user;
-		}
-		else {
-			throw new RuntimeException("User not found");
-		}
+	public Customer findById(Long id) {
+		Optional <Customer> user = userRepository.findById(id);
+		return user.orElseThrow(() -> new BusinessException(AppErrorCode.ERROR_CUSTOMER_NOT_FOUND));
 	}
 
 	@Transactional
 	@Override
-	public Optional<Customer> findByNameAndLastNames(String name, String lastNames) {
+	public Customer findByNameAndLastNames(String name, String lastNames) {
 		Optional<Customer> user = userRepository.findByNameAndLastNames(name, lastNames);
-		if (user.isPresent()) {
-			return user;
-		}
-		else {
-			throw new RuntimeException("User not found");
-		}
+		return user.orElseThrow(() -> new BusinessException(AppErrorCode.ERROR_CUSTOMER_NOT_FOUND));
 	}
 
 	@Transactional
 	@Override
-	public Optional<Customer> findByDni(String dni) {
+	public Customer findByDni(String dni) {
 		Optional<Customer> user = userRepository.findByDni(dni);
-		if (user.isPresent()) {
-			return user;
-		}
-		else {
-			throw new RuntimeException("User not found");
-		}
+		return user.orElseThrow(() -> new BusinessException(AppErrorCode.ERROR_CUSTOMER_NOT_FOUND));
 	}
 
 	@Transactional
 	@Override
-	public Optional<Customer> findByEmail(String email) {
+	public Customer findByEmail(String email) {
 		Optional<Customer> user = userRepository.findByEmail(email);
-		if (user.isPresent()) {
-			return user;
-		}
-		else {
-			throw new RuntimeException("User not found");
-		}
+		return user.orElseThrow(() -> new BusinessException(AppErrorCode.ERROR_CUSTOMER_NOT_FOUND));
 	}
 
 	@Transactional
 	@Override
 	public Customer save(Customer customer) {
-		customer.setRole(Rol.USER);
-		customer.setStatus(false);
-		return userRepository.save(customer);
+		try{
+			customer.setRole(Rol.USER);
+			customer.setStatus(false);
+			customer.setSubscriptionStatus(false);
+			return userRepository.save(customer);
+		} catch (Exception e) {
+			throw new BusinessException(AppErrorCode.ERROR_SAVE, e);
+		}
 	}
 
 	@Transactional
@@ -88,13 +81,12 @@ public class CustomerServiceImpl implements CustomerService {
 			Customer updatedCustomer = existingUser.get();
 			updatedCustomer.setName(customer.getName());
 			updatedCustomer.setLastNames(customer.getLastNames());
+			updatedCustomer.setDni(customer.getDni());
 			updatedCustomer.setEmail(customer.getEmail());
 			updatedCustomer.setTelephone(customer.getTelephone());
-			updatedCustomer.setRole(customer.getRole());
 			return userRepository.save(updatedCustomer);
-		}
-		else {
-			throw new RuntimeException("User not found");
+		} else {
+			throw new BusinessException(AppErrorCode.ERROR_UPDATE);
 		}
 	}
 
@@ -104,9 +96,8 @@ public class CustomerServiceImpl implements CustomerService {
 		Optional<Customer> user = userRepository.findByDni(dni);
 		if (user.isPresent()) {
 			userRepository.delete(user.get());
-		}
-		else {
-			throw new RuntimeException("User not found");
+		} else {
+			throw new BusinessException(AppErrorCode.ERROR_DELETE);
 		}
 	}
 

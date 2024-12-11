@@ -9,9 +9,9 @@ public interface PdfUrlService {
 
 	List<Pdf> findAll();
 
-	Optional<Pdf> findById(Long id);
+	Pdf findById(Long id);
 
-	Optional<Pdf> findByName(String name);
+	Pdf findByName(String name);
 
 	Pdf save(Pdf pdf);
 

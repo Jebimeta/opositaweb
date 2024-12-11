@@ -57,5 +57,4 @@ public class TestController implements TestApiDelegate {
 		TestResponse testResponse = conversionService.convert(updatedTest, TestResponse.class);
 		return ResponseEntity.ok(testResponse);
 	}
-
 }

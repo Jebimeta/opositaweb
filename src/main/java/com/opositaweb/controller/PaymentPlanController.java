@@ -22,8 +22,7 @@ public class PaymentPlanController implements PaymentPlanApiDelegate {
 
 	@Override
 	public ResponseEntity<PaymentPlanResponse> getPaymentPlanById(Integer id) {
-		PaymentPlan paymentPlan = paymentPlanService.findById(id.longValue())
-				.orElseThrow(() -> new RuntimeException("PaymentPlan not found"));
+		PaymentPlan paymentPlan = paymentPlanService.findById(id.longValue());
 		PaymentPlanResponse paymentPlanResponse = conversionService.convert(paymentPlan, PaymentPlanResponse.class);
 		return ResponseEntity.ok(paymentPlanResponse);
 	}
@@ -31,16 +30,15 @@ public class PaymentPlanController implements PaymentPlanApiDelegate {
 	@Override
 	public ResponseEntity<List<PaymentPlanResponse>> getPaymentPlans() {
 		List<PaymentPlanResponse> paymentPlans = paymentPlanService.findAll()
-				.stream()
-				.map(paymentPlan -> conversionService.convert(paymentPlan, PaymentPlanResponse.class))
-				.toList();
+			.stream()
+			.map(paymentPlan -> conversionService.convert(paymentPlan, PaymentPlanResponse.class))
+			.toList();
 		return ResponseEntity.ok(paymentPlans);
 	}
 
 	@Override
 	public ResponseEntity<PaymentPlanResponse> createPaymentPlan(PaymentPlanRequest paymentPlanRequest) {
-		PaymentPlan paymentPlan = conversionService.convert(paymentPlanRequest, PaymentPlan.class);
-		PaymentPlan savedPaymentPlan = paymentPlanService.save(paymentPlan);
+		PaymentPlan savedPaymentPlan = paymentPlanService.save(paymentPlanRequest);
 		PaymentPlanResponse paymentPlanResponse = conversionService.convert(savedPaymentPlan, PaymentPlanResponse.class);
 		return ResponseEntity.ok(paymentPlanResponse);
 	}
@@ -55,8 +53,7 @@ public class PaymentPlanController implements PaymentPlanApiDelegate {
 	public ResponseEntity<PaymentPlanResponse> updatePaymentPlan(Integer id, PaymentPlanRequest paymentPlanRequest) {
 		PaymentPlan paymentPlan = conversionService.convert(paymentPlanRequest, PaymentPlan.class);
 		PaymentPlan updatedPaymentPlan = paymentPlanService.update(paymentPlan);
-		PaymentPlanResponse paymentPlanResponse = conversionService.convert(updatedPaymentPlan, PaymentPlanResponse.class);
+		PaymentPlanResponse paymentPlanResponse = conversionService.convert(updatedPaymentPlan,	PaymentPlanResponse.class);
 		return ResponseEntity.ok(paymentPlanResponse);
 	}
-
 }

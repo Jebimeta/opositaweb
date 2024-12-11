@@ -22,7 +22,7 @@ public class PdfController implements PdfApiDelegate {
 
 	@Override
 	public ResponseEntity<PdfResponse> getPdfUrlById(Integer id) {
-		Pdf pdf = pdfUrlService.findById(id.longValue()).orElseThrow(() -> new RuntimeException("Pdf not found"));
+		Pdf pdf = pdfUrlService.findById(id.longValue());
 		PdfResponse pdfResponse = conversionService.convert(pdf, PdfResponse.class);
 		return ResponseEntity.ok(pdfResponse);
 	}

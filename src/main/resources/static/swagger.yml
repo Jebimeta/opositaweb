@@ -35,6 +35,9 @@ tags:
   - name: payment-plan
     description: Controller para los planes de pagos
 
+  - name: payment-type
+    description: Controller para los tipos de pagos
+
   - name: about
     description: Controller para recibir mensajes por parte de usuarios
 
@@ -195,7 +198,7 @@ paths:
                   $ref: '#/components/schemas/CustomerResponse'
 
   /customers/create-customer:
-    post:
+    patch:
       tags:
         - customer
       summary: Crear un nuevo usuario
@@ -523,6 +526,102 @@ paths:
         - payment-plan
       summary: Eliminar un plan de pago
       operationId: deletePaymentPlan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Plan de pago eliminado
+
+  /payment-type/obtain-payment-type:
+    get:
+      tags:
+        - payment-type
+      summary: Obtener todos los tipos de pago
+      operationId: getPaymentType
+      responses:
+        '200':
+          description: Lista de tipos de pago
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentTypeResponse'
+    post:
+      tags:
+        - payment-type
+      summary: Crear un nuevo tipo de pago
+      operationId: createPaymentType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentTypeRequest'
+      responses:
+        '201':
+          description: Plan de pago creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentTypeResponse'
+
+  /payment-type/find-payment-type/{id}:
+    get:
+      tags:
+        - payment-type
+      summary: Obtener un tipo de pago por ID
+      operationId: getPaymentTypeById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalles del plan de pago
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentTypeResponse'
+
+  /payment-type/update/{id}:
+    put:
+      tags:
+        - payment-type
+      summary: Actualizar un type de pago
+      operationId: updatePaymentType
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentTypeRequest'
+      responses:
+        '200':
+          description: Plan de tipo actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentTypeResponse'
+
+  /payment-type/delete/{id}:
+    delete:
+      tags:
+        - payment-plan
+      summary: Eliminar un tipo de pago
+      operationId: deletePaymentType
       parameters:
         - name: id
           in: path
@@ -946,18 +1045,12 @@ components:
         email:
           type: string
           example: juan.perez@example.com
-        password:
-          type: string
-          example: Password@123
         telephone:
           type: string
           example: "123456789"
         role:
           type: string
           example: USER
-        status:
-          type: boolean
-          example: true
 
     PaymentRequest:
       type: object
@@ -988,20 +1081,21 @@ components:
           $ref: '#/components/schemas/CustomerResponse'
         paymentPlan:
           $ref: '#/components/schemas/PaymentPlanResponse'
+        subscriptionStartDate:
+          type: string
+          format: date-time
 
     PaymentPlanRequest:
       type: object
       properties:
-        paymentType:
-          type: string
-          enum:
-            - MONTHLY
-            - HALF_YEAR
-            - ONE_YEAR
-        price:
-          type: number
-          format: float
-          example: 10.0
+        customerId:
+          type: integer
+          description: Id del usuario
+          example: 1
+        paymentPlan:
+          type: integer
+          description: Id del tipo de pago
+          example: 1
 
     PaymentPlanResponse:
       type: object
@@ -1018,6 +1112,34 @@ components:
           type: number
           format: float
           example: 10.0
+
+    PaymentTypeResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        paymentType:
+          type: string
+          enum:
+            - MONTHLY
+            - HALF_YEAR
+            - ONE_YEAR
+        price:
+          type: number
+          format: float
+          example: 10.0
+
+    PaymentTypeRequest:
+      type: object
+      properties:
+        customerId:
+          type: integer
+          description: Id del usuario
+          example: 1
+        paymentPlan:
+          type: integer
+          description: Id del tipo de pago
+          example: 1
 
     QuestionRequest:
       type: object

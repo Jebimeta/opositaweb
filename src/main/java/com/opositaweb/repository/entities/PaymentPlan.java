@@ -17,9 +17,6 @@ public class PaymentPlan {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "name", nullable = false)
-	private String name;
-
 	@Enumerated(EnumType.STRING)
 	@Column(name = "payment_type", nullable = false)
 	private PaymentType paymentType;

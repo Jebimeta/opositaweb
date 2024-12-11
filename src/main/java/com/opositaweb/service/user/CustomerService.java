@@ -9,13 +9,13 @@ public interface CustomerService {
 
 	List<Customer> findAll();
 
-	Optional<Customer> findById(Long id);
+	Customer findById(Long id);
 
-	Optional<Customer> findByNameAndLastNames(String name, String lastNames);
+	Customer findByNameAndLastNames(String name, String lastNames);
 
-	Optional<Customer> findByDni(String dni);
+	Customer findByDni(String dni);
 
-	Optional<Customer> findByEmail(String email);
+	Customer findByEmail(String email);
 
 	Customer save(Customer customer);
 

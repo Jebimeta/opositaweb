@@ -1,8 +1,12 @@
 package com.opositaweb.service.paymentplan.impl;
 
+import com.opositaweb.domain.vo.PaymentPlanRequest;
+import com.opositaweb.exception.AppErrorCode;
+import com.opositaweb.exception.BusinessException;
 import com.opositaweb.repository.entities.PaymentPlan;
 import com.opositaweb.repository.jpa.PaymentPlanRepository;
 import com.opositaweb.service.paymentplan.PaymentPlanService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,38 +19,26 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 
 	private final PaymentPlanRepository paymentPlanRepository;
 
+	@Transactional
 	@Override
 	public List<PaymentPlan> findAll() {
 		return paymentPlanRepository.findAll();
 	}
 
+	@Transactional
 	@Override
-	public Optional<PaymentPlan> findById(Long id) {
+	public PaymentPlan findById(Long id) {
 		Optional<PaymentPlan> paymentPlan = paymentPlanRepository.findById(id);
-		if (paymentPlan.isPresent()) {
-			return paymentPlan;
-		}
-		else {
-			throw new RuntimeException("PaymentPlan not found");
-		}
+		return paymentPlan.orElseThrow(() -> new BusinessException(AppErrorCode.ERROR_PAYMENTPLAN_NOT_FOUND));
 	}
 
+	@Transactional
 	@Override
-	public Optional<PaymentPlan> findByName(String name) {
-		Optional<PaymentPlan> paymentPlan = paymentPlanRepository.findByName(name);
-		if (paymentPlan.isPresent()) {
-			return paymentPlan;
-		}
-		else {
-			throw new RuntimeException("PaymentPlan not found");
-		}
+	public PaymentPlan save(PaymentPlanRequest paymentPlanRequest) {
+		return null;
 	}
 
-	@Override
-	public PaymentPlan save(PaymentPlan paymentPlan) {
-		return paymentPlanRepository.save(paymentPlan);
-	}
-
+	@Transactional
 	@Override
 	public PaymentPlan update(PaymentPlan paymentPlan) {
 		Optional<PaymentPlan> paymentPlanOptional = paymentPlanRepository.findById(paymentPlan.getId());
@@ -55,12 +47,12 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			paymentPlanUpdate.setPaymentType(paymentPlan.getPaymentType());
 			paymentPlanUpdate.setPrice(paymentPlan.getPrice());
 			return paymentPlanRepository.save(paymentPlanUpdate);
-		}
-		else {
-			throw new RuntimeException("PaymentPlan not found");
+		} else {
+			throw new BusinessException(AppErrorCode.ERROR_UPDATE);
 		}
 	}
 
+	@Transactional
 	@Override
 	public void delete(Long id) {
 		Optional<PaymentPlan> paymentPlan = paymentPlanRepository.findById(id);
@@ -68,8 +60,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			paymentPlanRepository.delete(paymentPlan.get());
 		}
 		else {
-			throw new RuntimeException("PaymentPlan not found");
+			throw new BusinessException(AppErrorCode.ERROR_DELETE);
 		}
 	}
-
 }

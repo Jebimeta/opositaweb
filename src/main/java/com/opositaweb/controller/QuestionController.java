@@ -22,8 +22,7 @@ public class QuestionController implements QuestionApiDelegate {
 
 	@Override
 	public ResponseEntity<QuestionResponse> getQuestionById(Integer id) {
-		Question question = questionService.findById(id.longValue())
-			.orElseThrow(() -> new RuntimeException("Question not found"));
+		Question question = questionService.findById(id.longValue());
 		QuestionResponse questionResponse = conversionService.convert(question, QuestionResponse.class);
 		return ResponseEntity.ok(questionResponse);
 	}

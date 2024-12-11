@@ -30,24 +30,21 @@ public class CustomerController implements CustomerApiDelegate {
 
 	@Override
 	public ResponseEntity<CustomerResponse> getUserByDni(String dni) {
-		Customer customer = customerService.findByDni(dni)
-			.orElseThrow(() -> new RuntimeException("Customer not found"));
+		Customer customer = customerService.findByDni(dni);
 		CustomerResponse customerResponse = conversionService.convert(customer, CustomerResponse.class);
 		return ResponseEntity.ok(customerResponse);
 	}
 
 	@Override
 	public ResponseEntity<CustomerResponse> getUserByEmail(String email) {
-		Customer customer = customerService.findByEmail(email)
-			.orElseThrow(() -> new RuntimeException("Customer not found"));
+		Customer customer = customerService.findByEmail(email);
 		CustomerResponse customerResponse = conversionService.convert(customer, CustomerResponse.class);
 		return ResponseEntity.ok(customerResponse);
 	}
 
 	@Override
 	public ResponseEntity<CustomerResponse> getUserById(Integer id) {
-		Customer customer = customerService.findById(id.longValue())
-			.orElseThrow(() -> new RuntimeException("Customer not found"));
+		Customer customer = customerService.findById(id.longValue());
 		CustomerResponse customerResponse = conversionService.convert(customer, CustomerResponse.class);
 		return ResponseEntity.ok(customerResponse);
 	}
@@ -74,7 +71,6 @@ public class CustomerController implements CustomerApiDelegate {
 		Customer customer = conversionService.convert(customerRequest, Customer.class);
 		customer.setId(id.longValue()); // Ensure the ID is set on the customer entity
 
-		// Ensure the role is not null
 		if (customer.getRole() == null) {
 			throw new IllegalArgumentException("The role must not be null");
 		}

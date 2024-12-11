@@ -9,8 +9,6 @@ public interface PaymentService {
 
 	List<Payment> findAll();
 
-	Optional<Payment> findByPaymentMethod(String paymentMethod);
-
 	Payment findById(Long id);
 
 	Payment save(Payment payment);

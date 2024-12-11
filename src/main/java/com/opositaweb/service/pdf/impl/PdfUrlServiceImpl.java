@@ -1,5 +1,7 @@
 package com.opositaweb.service.pdf.impl;
 
+import com.opositaweb.exception.AppErrorCode;
+import com.opositaweb.exception.BusinessException;
 import com.opositaweb.repository.entities.Pdf;
 import com.opositaweb.repository.jpa.PdfUrlRepository;
 import com.opositaweb.service.pdf.PdfUrlService;
@@ -24,32 +26,26 @@ public class PdfUrlServiceImpl implements PdfUrlService {
 
 	@Transactional
 	@Override
-	public Optional<Pdf> findById(Long id) {
+	public Pdf findById(Long id) {
 		Optional<Pdf> pdfUrl = pdfUrlRepository.findById(id);
-		if (pdfUrl.isPresent()) {
-			return pdfUrl;
-		}
-		else {
-			throw new RuntimeException("PdfUrl not found");
-		}
+		return pdfUrl.orElseThrow(() -> new BusinessException(AppErrorCode.ERROR_PDF_NOT_FOUND));
 	}
 
 	@Transactional
 	@Override
-	public Optional<Pdf> findByName(String name) {
+	public Pdf findByName(String name) {
 		Optional<Pdf> pdfUrl = pdfUrlRepository.findByName(name);
-		if (pdfUrl.isPresent()) {
-			return pdfUrl;
-		}
-		else {
-			throw new RuntimeException("PdfUrl not found");
-		}
+		return pdfUrl.orElseThrow(() -> new BusinessException(AppErrorCode.ERROR_PDF_NOT_FOUND));
 	}
 
 	@Transactional
 	@Override
 	public Pdf save(Pdf pdf) {
-		return pdfUrlRepository.save(pdf);
+		try {
+			return pdfUrlRepository.save(pdf);
+		} catch (Exception e) {
+			throw new BusinessException(AppErrorCode.ERROR_SAVE);
+		}
 	}
 
 	@Transactional
@@ -61,9 +57,8 @@ public class PdfUrlServiceImpl implements PdfUrlService {
 			pdfToUpdate.setName(pdf.getName());
 			pdfToUpdate.setUrl(pdf.getUrl());
 			return pdfUrlRepository.save(pdfToUpdate);
-		}
-		else {
-			throw new RuntimeException("PdfUrl not found");
+		} else {
+			throw new BusinessException(AppErrorCode.ERROR_UPDATE);
 		}
 	}
 
@@ -73,10 +68,8 @@ public class PdfUrlServiceImpl implements PdfUrlService {
 		Optional<Pdf> pdfUrl = pdfUrlRepository.findById(id);
 		if (pdfUrl.isPresent()) {
 			pdfUrlRepository.deleteById(id);
-		}
-		else {
-			throw new RuntimeException("PdfUrl not found");
+		} else {
+			throw new BusinessException(AppErrorCode.ERROR_DELETE);
 		}
 	}
-
 }

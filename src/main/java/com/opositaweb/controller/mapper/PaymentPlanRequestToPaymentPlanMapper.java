@@ -9,5 +9,6 @@ import org.springframework.core.convert.converter.Converter;
 @Mapper(componentModel = "spring")
 public interface PaymentPlanRequestToPaymentPlanMapper extends Converter<PaymentPlanRequest, PaymentPlan> {
 
-    PaymentPlan convert(@NonNull PaymentPlanRequest source);
+	PaymentPlan convert(@NonNull PaymentPlanRequest source);
+
 }
