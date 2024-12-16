@@ -43,7 +43,8 @@ public class PdfUrlServiceImpl implements PdfUrlService {
 	public Pdf save(Pdf pdf) {
 		try {
 			return pdfUrlRepository.save(pdf);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new BusinessException(AppErrorCode.ERROR_SAVE);
 		}
 	}
@@ -57,7 +58,8 @@ public class PdfUrlServiceImpl implements PdfUrlService {
 			pdfToUpdate.setName(pdf.getName());
 			pdfToUpdate.setUrl(pdf.getUrl());
 			return pdfUrlRepository.save(pdfToUpdate);
-		} else {
+		}
+		else {
 			throw new BusinessException(AppErrorCode.ERROR_UPDATE);
 		}
 	}
@@ -68,8 +70,10 @@ public class PdfUrlServiceImpl implements PdfUrlService {
 		Optional<Pdf> pdfUrl = pdfUrlRepository.findById(id);
 		if (pdfUrl.isPresent()) {
 			pdfUrlRepository.deleteById(id);
-		} else {
+		}
+		else {
 			throw new BusinessException(AppErrorCode.ERROR_DELETE);
 		}
 	}
+
 }

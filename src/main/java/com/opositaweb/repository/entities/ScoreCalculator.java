@@ -2,28 +2,25 @@ package com.opositaweb.repository.entities;
 
 import com.opositaweb.repository.enums.AnswerPoints;
 import com.opositaweb.repository.enums.Option;
+import lombok.Getter;
 
+@Getter
 public class ScoreCalculator {
 
-	private double totalScore = 0.0;
+	private static double totalScore;
 
-	public double calculateScore(Question question, Option selectedOption) {
-		double score;
-		if (selectedOption == null) {
-			score = AnswerPoints.UNANSWERED.getPoints();
-		}
-		else if (question.checkAnswer(selectedOption)) {
-			score = AnswerPoints.CORRECT.getPoints();
-		}
-		else {
-			score = AnswerPoints.WRONG.getPoints();
-		}
-		totalScore += score;
-		return score;
+	private static double checkAnswer(Option selectedOption, Question question) {
+		return selectedOption.name().equals(question.getAnswer()) ? AnswerPoints.CORRECT.getPoints()
+				: AnswerPoints.WRONG.getPoints();
 	}
 
-	public double getTotalScore() {
-		return totalScore;
+	private static void calculateScore(Option selectedOption, Question question) {
+		if (selectedOption != null) {
+			totalScore += checkAnswer(selectedOption, question);
+		}
+		else {
+			totalScore += AnswerPoints.UNANSWERED.getPoints();
+		}
 	}
 
 }

@@ -35,10 +35,11 @@ public class QuestionServiceImpl implements QuestionService {
 	@Transactional
 	@Override
 	public Question save(Question question) {
-		try{
+		try {
 			return questionRepository.save(question);
-		} catch (Exception e) {
-			throw new BusinessException((AppErrorCode.ERROR_SAVE));
+		}
+		catch (BusinessException e) {
+			throw new BusinessException(AppErrorCode.ERROR_SAVE, e.getMessage());
 		}
 	}
 
@@ -46,7 +47,7 @@ public class QuestionServiceImpl implements QuestionService {
 	@Override
 	public Question update(Question question) {
 		Optional<Question> existingQuestion = questionRepository.findById(question.getId());
-		if (existingQuestion.isPresent()){
+		if (existingQuestion.isPresent()) {
 			Question updatedQuestion = existingQuestion.get();
 			updatedQuestion.setQuestionStatement(question.getQuestionStatement());
 			updatedQuestion.setOptionA(question.getOptionA());
@@ -58,7 +59,8 @@ public class QuestionServiceImpl implements QuestionService {
 			updatedQuestion.setTheme(question.getTheme());
 			updatedQuestion.setTest(question.getTest());
 			return questionRepository.save(updatedQuestion);
-		}else{
+		}
+		else {
 			throw new BusinessException(AppErrorCode.ERROR_UPDATE);
 		}
 	}
@@ -67,10 +69,12 @@ public class QuestionServiceImpl implements QuestionService {
 	@Override
 	public void delete(Long id) {
 		Optional<Question> question = questionRepository.findById(id);
-		if (question.isPresent()){
+		if (question.isPresent()) {
 			questionRepository.delete(question.get());
-		}else{
+		}
+		else {
 			throw new BusinessException(AppErrorCode.ERROR_DELETE);
 		}
 	}
+
 }

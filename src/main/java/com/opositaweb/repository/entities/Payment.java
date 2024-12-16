@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "payment")
@@ -22,7 +23,7 @@ public class Payment {
 	private Float amount;
 
 	@Column(name = "payment_date", nullable = false, columnDefinition = "TIMESTAMP")
-	private LocalDate paymentDate;
+	private LocalDateTime paymentDate;
 
 	@ManyToOne
 	@JoinColumn(name = "customer_id", nullable = false)
@@ -33,6 +34,6 @@ public class Payment {
 	private PaymentPlan paymentPlan;
 
 	@Column(name = "subscription_start_date", nullable = false, columnDefinition = "TIMESTAMP")
-	private LocalDate subscriptionStartDate;
+	private LocalDateTime subscriptionStartDate;
 
 }

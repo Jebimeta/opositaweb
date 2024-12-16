@@ -39,9 +39,10 @@ public class PaymentServiceImpl implements PaymentService {
 	@Transactional
 	@Override
 	public Payment save(Payment payment) {
-		try{
+		try {
 			return paymentRepository.save(payment);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new BusinessException(AppErrorCode.ERROR_SAVE, e);
 		}
 
@@ -75,4 +76,5 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new BusinessException(AppErrorCode.ERROR_DELETE);
 		}
 	}
+
 }

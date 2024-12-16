@@ -54,8 +54,4 @@ public class Question {
 	@JoinColumn(name = "test_id", nullable = false, unique = true)
 	private Test test;
 
-	public boolean checkAnswer(Option selectedOption) {
-		return selectedOption.name().equals(this.answer);
-	}
-
 }

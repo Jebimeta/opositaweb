@@ -47,7 +47,8 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			paymentPlanUpdate.setPaymentType(paymentPlan.getPaymentType());
 			paymentPlanUpdate.setPrice(paymentPlan.getPrice());
 			return paymentPlanRepository.save(paymentPlanUpdate);
-		} else {
+		}
+		else {
 			throw new BusinessException(AppErrorCode.ERROR_UPDATE);
 		}
 	}
@@ -63,4 +64,5 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			throw new BusinessException(AppErrorCode.ERROR_DELETE);
 		}
 	}
+
 }

@@ -28,15 +28,14 @@ public class TestServiceImpl implements TestService {
 	@Transactional
 	@Override
 	public Test findById(Long id) {
-		Optional<Test> test = testRepository.findById(id);
 		return testRepository.findById(id).orElseThrow(() -> new BusinessException(AppErrorCode.ERROR_TEST_NOT_FOUND));
 	}
 
 	@Transactional
 	@Override
 	public Test findByName(String name) {
-		Optional<Object> test = testRepository.findByName(name);
-		return (Test) testRepository.findByName(name).orElseThrow(() -> new BusinessException(AppErrorCode.ERROR_TEST_NOT_FOUND));
+		return (Test) testRepository.findByName(name)
+			.orElseThrow(() -> new BusinessException(AppErrorCode.ERROR_TEST_NOT_FOUND));
 	}
 
 	@Transactional
@@ -44,7 +43,8 @@ public class TestServiceImpl implements TestService {
 	public Test save(Test test) {
 		try {
 			return testRepository.save(test);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new BusinessException(AppErrorCode.ERROR_SAVE, e);
 		}
 	}
@@ -53,11 +53,12 @@ public class TestServiceImpl implements TestService {
 	@Override
 	public Test update(Test test) {
 		Optional<Test> existingTest = testRepository.findById(test.getId());
-		if (existingTest.isPresent()){
+		if (existingTest.isPresent()) {
 			Test testToUpdate = existingTest.get();
 			testToUpdate.setName(test.getName());
 			return testRepository.save(test);
-		} else {
+		}
+		else {
 			throw new BusinessException(AppErrorCode.ERROR_UPDATE);
 		}
 	}
@@ -66,10 +67,12 @@ public class TestServiceImpl implements TestService {
 	@Override
 	public void delete(Long id) {
 		Optional<Test> test = testRepository.findById(id);
-		if(test.isPresent()){
+		if (test.isPresent()) {
 			testRepository.delete(test.get());
-		}else {
+		}
+		else {
 			throw new BusinessException(AppErrorCode.ERROR_DELETE);
 		}
 	}
+
 }

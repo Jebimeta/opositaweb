@@ -39,7 +39,8 @@ public class PaymentPlanController implements PaymentPlanApiDelegate {
 	@Override
 	public ResponseEntity<PaymentPlanResponse> createPaymentPlan(PaymentPlanRequest paymentPlanRequest) {
 		PaymentPlan savedPaymentPlan = paymentPlanService.save(paymentPlanRequest);
-		PaymentPlanResponse paymentPlanResponse = conversionService.convert(savedPaymentPlan, PaymentPlanResponse.class);
+		PaymentPlanResponse paymentPlanResponse = conversionService.convert(savedPaymentPlan,
+				PaymentPlanResponse.class);
 		return ResponseEntity.ok(paymentPlanResponse);
 	}
 
@@ -53,7 +54,9 @@ public class PaymentPlanController implements PaymentPlanApiDelegate {
 	public ResponseEntity<PaymentPlanResponse> updatePaymentPlan(Integer id, PaymentPlanRequest paymentPlanRequest) {
 		PaymentPlan paymentPlan = conversionService.convert(paymentPlanRequest, PaymentPlan.class);
 		PaymentPlan updatedPaymentPlan = paymentPlanService.update(paymentPlan);
-		PaymentPlanResponse paymentPlanResponse = conversionService.convert(updatedPaymentPlan,	PaymentPlanResponse.class);
+		PaymentPlanResponse paymentPlanResponse = conversionService.convert(updatedPaymentPlan,
+				PaymentPlanResponse.class);
 		return ResponseEntity.ok(paymentPlanResponse);
 	}
+
 }

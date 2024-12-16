@@ -22,10 +22,10 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional
 	@Override
 	public List<Customer> findAll() {
-		List<Customer> customers = userRepository.findAll().
-				stream().
-				filter(customer -> customer.getRole().equals(Rol.USER)).
-				toList();
+		List<Customer> customers = userRepository.findAll()
+			.stream()
+			.filter(customer -> customer.getRole().equals(Rol.USER))
+			.toList();
 		if (customers.isEmpty()) {
 			throw new BusinessException(AppErrorCode.ERROR_CUSTOMER_NOT_FOUND);
 		}
@@ -35,7 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional
 	@Override
 	public Customer findById(Long id) {
-		Optional <Customer> user = userRepository.findById(id);
+		Optional<Customer> user = userRepository.findById(id);
 		return user.orElseThrow(() -> new BusinessException(AppErrorCode.ERROR_CUSTOMER_NOT_FOUND));
 	}
 
@@ -63,12 +63,13 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional
 	@Override
 	public Customer save(Customer customer) {
-		try{
+		try {
 			customer.setRole(Rol.USER);
 			customer.setStatus(false);
 			customer.setSubscriptionStatus(false);
 			return userRepository.save(customer);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new BusinessException(AppErrorCode.ERROR_SAVE, e);
 		}
 	}
@@ -85,7 +86,8 @@ public class CustomerServiceImpl implements CustomerService {
 			updatedCustomer.setEmail(customer.getEmail());
 			updatedCustomer.setTelephone(customer.getTelephone());
 			return userRepository.save(updatedCustomer);
-		} else {
+		}
+		else {
 			throw new BusinessException(AppErrorCode.ERROR_UPDATE);
 		}
 	}
@@ -96,7 +98,8 @@ public class CustomerServiceImpl implements CustomerService {
 		Optional<Customer> user = userRepository.findByDni(dni);
 		if (user.isPresent()) {
 			userRepository.delete(user.get());
-		} else {
+		}
+		else {
 			throw new BusinessException(AppErrorCode.ERROR_DELETE);
 		}
 	}
