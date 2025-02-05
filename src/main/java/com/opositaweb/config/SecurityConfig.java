@@ -26,9 +26,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
 	// Servicio personalizado para cargar detalles de usuario.
-	private final UserDetailsServiceImpl userDetailsService;
+	private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-	// Manejador personalizado para el cierre de sesión.
+	// Manejador personalizado para acel cierre de sesión.
 	private final CustomLogoutHandler customLogoutHandler;
 
 	// Filtro para la autenticación basada en JWT.
@@ -75,7 +75,7 @@ public class SecurityConfig {
 	 * Configura el servicio que proporciona los detalles de los usuarios.
 	 */
 	private void configureUserDetailsService(HttpSecurity http) throws Exception {
-		http.userDetailsService(userDetailsService);
+		http.userDetailsService(userDetailsServiceImpl);
 	}
 
 	/**

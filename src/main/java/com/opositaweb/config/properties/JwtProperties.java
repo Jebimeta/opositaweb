@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-@AllArgsConstructor
 public class JwtProperties {
 
 	private String secretKey;

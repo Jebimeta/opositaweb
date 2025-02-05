@@ -1,6 +1,5 @@
 package com.opositaweb.config;
 
-// Importaciones necesarias
 import com.opositaweb.repository.jpa.TokenJpaRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
