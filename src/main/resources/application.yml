@@ -1,0 +1,61 @@
+logging:
+  level:
+    com:
+      oposita:
+        web: DEBUG
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/opositaweb
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: smtp.gmail.com
+    default-encoding: UTF-8
+
+opositaweb:
+  mail:
+    hostEmail: proyectoopositaweb@gmail.com
+    host: http://localhost:4200/
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+  security:
+    jwt:
+      secretKey: 4bb6d1dfbafb64a681139d1586b6f1160d18159afd57c8c79136d7490630407c
+      accessTokenExpiration: 86400000
+      refreshTokenExpiration: 604800000
+  upload:
+    directory: src/main/resources/static/archives/pdfs/
+    baseUrl: http://localhost:8080/archives/pdfs/
+    localDirectory: file:C:/Users/MiJoze/Documents/Proyectos/opositaweb/src/main/resources/static/archives/pdfs/
+
+springdoc:
+  api-docs:
+    title: OpositaWeb API
+    description: API REST de OpositaWeb
+    version: "OpenAPI 3.0"
+    contact:
+      name: "José Marchena Roldán"
+      email: "jebilongo@gmail.com"
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
