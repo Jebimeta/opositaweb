@@ -23,4 +23,10 @@ public interface CustomerService {
 
 	void delete(String dni);
 
+	String generateVerificationToken(Customer customer);
+
+	Customer verifyCustomerByToken(String token);
+
+	Customer findCustomerByVerificationToken(String token);
+
 }
