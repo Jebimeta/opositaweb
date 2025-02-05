@@ -15,4 +15,8 @@ public class OpositaWebProperties {
 
 	private final OpositaWebSecurityProperties security;
 
+	private final MailProperties mail;
+
+	private final UploadProperties upload;
+
 }
