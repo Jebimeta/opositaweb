@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public Customer save(Customer customer) {
 		try {
+
 			customer.setRole(Rol.USER);
 			customer.setStatus(false);
 			customer.setSubscriptionStatus(false);
@@ -104,4 +106,37 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 	}
 
+	@Transactional
+	@Override
+	public String generateVerificationToken(Customer customer) {
+		return UUID.randomUUID().toString();
+	}
+
+	@Transactional
+	@Override
+	public Customer verifyCustomerByToken(String token) {
+		Optional<Customer> user = userRepository.findByVerificationToken(token);
+		if(user.isPresent()) {
+			Customer customer = user.get();
+			customer.setStatus(true);
+			customer.setVerificationToken(null);
+			userRepository.save(customer);
+			return customer;
+		}
+		else {
+			throw new BusinessException(AppErrorCode.ERROR_INVALID_VERIFICATION_TOKEN);
+		}
+	}
+
+	@Transactional
+	@Override
+	public Customer findCustomerByVerificationToken(String token) {
+		Optional<Customer> user = userRepository.findByVerificationToken(token);
+		if(user.isPresent()) {
+			return user.get();
+		}
+		else {
+			throw new BusinessException(AppErrorCode.ERROR_INVALID_VERIFICATION_TOKEN);
+		}
+	}
 }
