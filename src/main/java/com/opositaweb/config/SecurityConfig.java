@@ -20,18 +20,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.opositaweb.config.enums.OpositaWebApiEndpoints.*;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-	// Servicio personalizado para cargar detalles de usuario.
 	private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-	// Manejador personalizado para acel cierre de sesión.
 	private final CustomLogoutHandler customLogoutHandler;
 
-	// Filtro para la autenticación basada en JWT.
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	/**
@@ -62,11 +61,20 @@ public class SecurityConfig {
 	private void configureAuthorization(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(
 				registry -> registry
-						.requestMatchers("/**") // Define patrones de URL.
-						.permitAll() // Permite acceso sin autenticación.
-						.requestMatchers("/**") // Define patrones adicionales (puede optimizarse).
+						.requestMatchers(SWAGGER_UI_HTML.getUrl(), SWAGGER_UI.getUrl(), API_DOCS.getUrl()) // Define patrones de URL.
+						.permitAll()
+						.requestMatchers(LOGIN_URL.getUrl(), REGISTER_URL.getUrl(), REFRESH_TOKEN_URL.getUrl(), VERIFY_TOKEN_URL.getUrl(),
+								SEND_EMAIL_URL.getUrl(), PAYMENT_PLAN_LIST_URL.getUrl(), PAYMENT_PLAN_SAVE_URL.getUrl(), PDF_LIST_URL.getUrl(),
+								PDF_BY_ID_URL.getUrl(),  TEST_LIST_URL.getUrl(), PDF_LIST_URL.getUrl(), SEND_EMAIL_URL.getUrl())
+						.permitAll()// Permite acceso sin autenticación.
+						.requestMatchers(USERS_LIST_URL.getUrl(), USER_BY_ID_URL.getUrl(), USER_BY_EMAIL_URL.getUrl(), USER_BY_USERNAME_URL.getUrl(),
+								USER_UPDATE_URL.getUrl(), USER_DELETE_URL.getUrl(), PAYMENT_PLAN_BY_ID_URL.getUrl(), PAYMENT_PLAN_SAVE_URL.getUrl(),
+								PAYMENT_PLAN_DELETE_URL.getUrl(), QUESTION_BY_ID_URL.getUrl(), QUESTION_SAVE_URL.getUrl(), QUESTION_UPDATE_URL.getUrl(),
+								QUESTION_DELETE_URL.getUrl(), TEST_SAVE_URL.getUrl(), TEST_UPDATE_URL.getUrl(), TEST_DELETE_URL.getUrl(), PDF_SAVE_URL.getUrl(),
+								PDF_UPDATE_URL.getUrl(), PDF_DELETE_URL.getUrl(), PAYMENT_LIST_URL.getUrl(), PAYMENT_BY_ID_URL.getUrl(), PAYMENT_SAVE_URL.getUrl(),
+								PAYMENT_UPDATE_URL.getUrl(), PAYMENT_DELETE_URL.getUrl())
 						.hasRole("ROLE_ADMIN") // Restringe acceso a usuarios con rol ADMIN.
-						.requestMatchers("/**") // Define patrones adicionales (puede optimizarse).
+						.requestMatchers(LOGOUT_URL.getUrl(), AUTHENTICATED_USER_INFO_URL.getUrl(), QUESTION_LIST_URL.getUrl(), TEST_BY_ID_URL.getUrl(), PDF_BY_ID_URL.getUrl()) // Define patrones adicionales (puede optimizarse).
 						.authenticated() // Requiere autenticación para estas rutas.
 		);
 	}
