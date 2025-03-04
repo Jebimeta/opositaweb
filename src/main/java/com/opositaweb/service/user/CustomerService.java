@@ -29,4 +29,6 @@ public interface CustomerService {
 
 	Customer findCustomerByVerificationToken(String token);
 
+	Customer getCustomerByUserName(String name);
+
 }

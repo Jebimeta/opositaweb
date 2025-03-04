@@ -139,4 +139,16 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new BusinessException(AppErrorCode.ERROR_INVALID_VERIFICATION_TOKEN);
 		}
 	}
+
+	@Transactional
+	@Override
+	public Customer getCustomerByUserName(String name) {
+		Optional<Customer> user = userRepository.findByNameAndLastNames(name, name);
+		if(user.isPresent()) {
+			return user.get();
+		}
+		else {
+			throw new BusinessException(AppErrorCode.ERROR_CUSTOMER_NOT_FOUND);
+		}
+	}
 }
