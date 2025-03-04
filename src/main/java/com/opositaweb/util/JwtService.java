@@ -88,6 +88,11 @@ public class JwtService {
                 .getPayload();
     }
 
+    // Genera un access token con una fecha de expiración específica.
+    public String generateAccessToken(Customer customer){
+        return generateToken(customer, opositaWebProperties.getSecurity().getJwt().getAccessTokenExpiration());
+    }
+
     // Genera un refresh token con una fecha de expiración específica.
     public String generateRefreshToken(Customer customer, String expirationInMillis){
         long expireTimeInMillis = Long.parseLong(expirationInMillis);  // Convierte el tiempo de expiración en milisegundos.
@@ -102,6 +107,20 @@ public class JwtService {
                 .compact();  // Genera el token en formato compacto (string JWT).
                 // Compact(): Permite iniciar sesión y reciba un token que prueba su identidad sin necesidad de enviar credenciales en cada solicitud
                 //Incluye informarcion sobre los permisos de usuario, como su role o privilegios. E incluye una firma digital para asegurar su integridad.
+    }
+
+    // Genera un token JWT con el nombre de usuario y la fecha de expiración.
+    private String generateToken(Customer customer, String expirationInMillis) {
+        long expireTimeInMillis = Long.parseLong(expirationInMillis);
+        Date expirationDate = Date.from(Instant.now().plus(expireTimeInMillis, ChronoUnit.MILLIS));
+
+        return Jwts.builder()
+                .subject(customer.getUsername())
+                .claim("role", customer.getRole().name())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(expirationDate)
+                .signWith(getSigningKey())
+                .compact();
     }
 
     // Obtiene la clave secreta para firmar y verificar los tokens.
