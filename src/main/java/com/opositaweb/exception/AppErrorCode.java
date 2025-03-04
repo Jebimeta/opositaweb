@@ -19,6 +19,8 @@ public enum AppErrorCode {
 	ERROR_SAVE_PDF_NAME("Error saving the PDF name"),
 	ERROR_DELETE_PDF("Error deleting the PDF"),
 	ERROR_INVALID_VERIFICATION_TOKEN("Invalid verification token"),
+	ERROR_NOT_VERIFIED_ACCOUNT("The account is not verified"),
+	ERROR_NOT_AUTHENTICATED_ACCOUNT("The user is not authenticated"),
 	;
 
 
