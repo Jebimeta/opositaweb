@@ -1,4 +1,4 @@
-package com.opositaweb.service.auth;
+package com.opositaweb.service.auth.impl;
 
 import com.opositaweb.repository.entities.Customer;
 import com.opositaweb.service.user.CustomerService;
