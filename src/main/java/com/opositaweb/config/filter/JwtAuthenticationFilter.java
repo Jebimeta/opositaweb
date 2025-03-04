@@ -1,6 +1,6 @@
 package com.opositaweb.config.filter;
 
-import com.opositaweb.service.auth.UserDetailsServiceImpl;
+import com.opositaweb.service.auth.impl.UserDetailsServiceImpl;
 import com.opositaweb.util.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
