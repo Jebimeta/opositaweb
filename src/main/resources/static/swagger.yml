@@ -196,6 +196,77 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CustomerResponse'
+  /auth/password-reset/request:
+    post:
+      tags:
+       - auth
+      summary: Envia el link de resetear la contraseña
+      description: Envia el codigo de resetear la contraseña al email del usuario
+      operationId: passwordReset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email address of the user.
+                  example: user@example.com
+      responses:
+        '200':
+          description: Password reset link sent successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "No se encontró ningún usuario autenticado."
+
+  /auth/password-reset/confirm:
+    patch:
+      tags:
+        - auth
+      summary: Resetea la contrasela utilizando el token
+      description: Si el token es valido, resetea la contraseña
+      operationId: passwordResetConfirm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                verification-token:
+                  type: string
+                  description: The password reset token sent to the user's email.
+                  example: dummytoken123
+                newPassword:
+                  type: string
+                  format: password
+                  description: The new password for the user.
+                  example: P@ssw0rd123
+      responses:
+        '200':
+          description: Password reset successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '400':
+          description: Invalid or expired token.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "No se encontró ningún usuario autenticado."
 
   /customers/create-customer:
     patch:
