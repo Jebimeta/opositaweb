@@ -1,6 +1,6 @@
 package com.opositaweb.config;
 
-import com.opositaweb.config.filter.JwtAuthenticationFilter;
+import com.opositaweb.filter.JwtAuthenticationFilter;
 import com.opositaweb.service.auth.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
