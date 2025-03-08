@@ -54,9 +54,9 @@ public class CustomerTokenService {
     }
 
     // Crea nuevos tokens de acceso y refresco
-    public AuthenticationResponse createNewTokens(Customer customer, String expirationInMillis){
+    public AuthenticationResponse createNewTokens(Customer customer){
         String newAccessToken = jwtService.generateAccessToken(customer);
-        String newRefreshToken = jwtService.generateRefreshToken(customer, expirationInMillis);
+        String newRefreshToken = jwtService.generateRefreshToken(customer);
 
         revokeAllTokenByUser(customer);
         saveUserToken(newAccessToken, newRefreshToken, customer);
@@ -65,12 +65,12 @@ public class CustomerTokenService {
     }
 
     // Valida y genera nuevos tokens de acceso y refresco
-    public ResponseEntity<AuthenticationResponse> validateAndGenerateNewTokens(String refreshTooken, Customer customer){
-        if(!jwtService.isValidRefreshToken(refreshTooken, customer)){
+    public ResponseEntity<AuthenticationResponse> validateAndGenerateNewTokens(String refreshToken, Customer customer){
+        if(!jwtService.isValidRefreshToken(refreshToken, customer)){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        AuthenticationResponse response = createNewTokens(customer, refreshTooken);
+        AuthenticationResponse response = createNewTokens(customer);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
