@@ -1,4 +1,4 @@
-package com.opositaweb.config.filter;
+package com.opositaweb.filter;
 
 import com.opositaweb.service.auth.impl.UserDetailsServiceImpl;
 import com.opositaweb.util.JwtService;

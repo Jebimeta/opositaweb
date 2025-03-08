@@ -1,6 +1,7 @@
-package com.opositaweb.config.properties;
+package com.opositaweb.config;
 
 
+import com.opositaweb.config.properties.OpositaWebProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
