@@ -43,11 +43,6 @@ public class Customer implements UserDetails {
 	@Column(name = "email", nullable = false)
 	private String email;
 
-	// @Pattern(regexp =
-	// "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\\\d)(?=.*[@$!%*?&^#_+=])[A-Za-z\\\\d@$!%*?&^#_+=]{8,}$\n",
-	// message = "El Password debe tener al menos 8 caracteres, una letra mayúscula, una
-	// letra minúscula, un número, un carácter especial y no puede tener más de dos
-	// números seguidos")
 	@NotBlank(message = "El Password no se puede quedar vacío")
 	@Column(name = "password", nullable = false)
 	private String password;
