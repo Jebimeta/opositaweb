@@ -41,7 +41,7 @@ public class AuthController implements AuthApiDelegate {
     }
 
     @Override
-    public ResponseEntity<AuthenticationResponse> loginUser(LoginRequest loginRequest){
+    public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody LoginRequest loginRequest){
         Customer customer = conversionService.convert(loginRequest, Customer.class);
         return ResponseEntity.ok(authenticationService.authenticate(customer));
     }
