@@ -24,7 +24,7 @@ public class MailSenderService {
 
     private final JavaMailSender mailSender;
 
-    private final OpositaWebProperties properties;
+    private final OpositaWebProperties opositaWebProperties;
 
     private final CustomerService customerService;
 
@@ -35,15 +35,15 @@ public class MailSenderService {
             throws BusinessException {
 
         String subject = "Contacta con nosotros";
-        String email = properties.getMail().getHostEmail();
+        String email = opositaWebProperties.getMail().getHostEmail();
         String headerMessage = "Se ha recibido un correo a través del formulario de contacta con nosotros, "
-                + "los datos del remitente son los siguientes: ";
-        String content = headerMessage + "\n"
-                + "Nombre: " + senderName + "\n"
-                + "Teléfono: " + phoneNumber + "\n"
-                + "Correo: " + email + "\n"
+                + "los datos del remitente son los siguientes: <br>";
+        String content = headerMessage + "<br>"
+                + "Nombre: " + senderName + "<br>"
+                + "Teléfono: " + phoneNumber + "<br>"
+                + "Correo: " + email + "<br><br>"
                 + "Mensaje: " + emailMessage;
-        try{
+        try {
             sendMessage(email, senderName, subject, content);
             return EmailResponseFactory.createEmailResponse("Correo enviado correctamente");
         } catch (MessagingException | UnsupportedEncodingException e) {
@@ -57,8 +57,8 @@ public class MailSenderService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        helper.setFrom(properties.getMail().getUsername(), senderName);
-        helper.setFrom(email);
+        helper.setFrom(opositaWebProperties.getMail().getUsername(), senderName);
+        helper.setTo(email);
         helper.setSubject(subject);
         helper.setText(content, true);
 
@@ -68,10 +68,10 @@ public class MailSenderService {
     // Envia un correo de verificación al usuario
     public void sendVerificationEmail(Customer user) throws BusinessException {
         String subject = "Verificación de Registro";
-        String senderName = "Rita Rouge";
-        String verifyURL = properties.getMail().getHost() + "/auth/verify/" + user.getVerificationToken();
+        String senderName = "Oposita Web";
+        String verifyURL = opositaWebProperties.getMail().getHost() + "/auth/verify/" + user.getVerificationToken();
 
-        String content = "Estimado " + user.getName() + ",<br>"
+        String content = "Estimado " + user.getName() + " " + user.getLastNames() + ",<br>"
                 + "Por favor, haga clic en el siguiente enlace para verificar su registro:<br>" + "<h3><a href=\""
                 + verifyURL + "\" target=\"_self\">VERIFICAR</a></h3>" + "Gracias,<br>" + senderName + ".";
 
@@ -95,7 +95,7 @@ public class MailSenderService {
         String verificationToken = tokenService.generateVerificationToken(customer);
         customer.setVerificationToken(verificationToken);
 
-        String verifyURL = properties.getMail().getHost() + "/auth/password-reset/request/"
+        String verifyURL = opositaWebProperties.getMail().getHost() + "/auth/password-reset/request/"
                 + customer.getVerificationToken();
 
         String content = "Estimado " + customer.getName() + ",<br>"
