@@ -34,7 +34,7 @@ spring:
 opositaweb:
   mail:
     hostEmail: proyectoopositaweb@gmail.com
-    host: http://localhost:4200/
+    host: http://localhost:4200
     username: ${SMTP_USERNAME}
     password: ${SMTP_PASSWORD}
   security:
