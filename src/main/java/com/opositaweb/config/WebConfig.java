@@ -17,7 +17,7 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry){
                 // Configura CORS para permitir todas las solicitudes desde cualquier origen, con cualquier método y encabezado.
                 registry.addMapping("/**") // Permite CORS para todas las rutas.
-                        .allowedOrigins("*") // Permite solicitudes desde cualquier origen.
+                        .allowedOrigins("http://localhost:4200") // Permite solicitudes desde cualquier origen.
                         .allowedMethods("GET", "POST", "PUT", "DELETE") // Permite todos los métodos HTTP (GET, POST, etc.).
                         .allowedHeaders("*") // Permite todos los encabezados HTTP.
                         .allowCredentials(true) // No permite el envío de credenciales (cookies, cabeceras de autenticación, etc.).
