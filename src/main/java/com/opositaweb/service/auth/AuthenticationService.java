@@ -67,8 +67,8 @@ public class AuthenticationService {
         Customer customer = customerRequestFactory.createCustomerRequest(request);
         String verificationToken = customerService.generateVerificationToken(customer);
         customer.setVerificationToken(verificationToken);
-        RegisterResponse response = sendVerificationEmail(customer);
-        return response;
+        userRepository.save(customer);
+        return sendVerificationEmail(customer);
     }
 
     // Envía un correo de verificación al usuario
